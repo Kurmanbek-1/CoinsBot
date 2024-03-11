@@ -1,0 +1,6 @@
+.idea
+venv
+**/__pycache__/
+.env
+**/__init__.py/
+db/all_users
