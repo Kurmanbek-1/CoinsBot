@@ -11,7 +11,7 @@ async def send_users(message: types.Message):
         user_scores = cursor.fetchall()
 
         if not user_scores:
-            await message.answer("Нет доступных пользователей.")
+            await message.answer("Список пуст!")
             return
 
         for user in user_scores:
@@ -38,13 +38,12 @@ async def delete_user(callback_query: types.CallbackQuery):
         print(f"Пользователь {user_name} успешно удален.")
 
         await bot.answer_callback_query(callback_query.id, text=f"Пользователь {user_name} удален.")
-        # Обновление списка пользователей после удаления
-        await send_users(callback_query.message)
+        await bot.delete_message(callback_query.id, callback_query.message.message_id)
     except Exception as e:
         print(f"Ошибка при удалении пользователя: {e}")
         await bot.answer_callback_query(callback_query.id, text=f"Ошибка при удалении пользователя: {e}")
 
 
 def register_delete(dp: Dispatcher):
-    dp.register_message_handler(send_users, commands=["Все_пользователи!", "all_users"])
+    dp.register_message_handler(send_users, commands=["Все_баллы!", "all_coins"])
     dp.register_callback_query_handler(delete_user, lambda c: c.data.startswith('delete_user_'))

@@ -1,6 +1,5 @@
-from db.ORM import cursor
+from db.ORM import cursor, db
 from aiogram import Dispatcher, types
-
 
 async def get_user_coins(message: types.Message):
     # Получаем telegram_id пользователя из сообщения
@@ -28,7 +27,8 @@ async def get_user_coins(message: types.Message):
             await message.bot.send_message(chat_id=telegram_id, text='Баллы не найдены.')
     else:
         # Если пользователь не найден в таблице 'users'
-        await message.bot.send_message(chat_id=telegram_id, text='Вы не зарегистрированы в системе.')
+        await message.bot.send_message(chat_id=telegram_id, text='Вы не зарегистрированы в системе.❌\n'
+                                                                 'Воспользуйтесь командой ➡️ /register.')
 
 
 async def update_user_coins(message: types.Message, new_quantity: int):
@@ -55,7 +55,8 @@ async def update_user_coins(message: types.Message, new_quantity: int):
                                        text=f'Количество ваших баллов было обновлено: {new_quantity}')
     else:
         # Если пользователь не найден в таблице 'users'
-        await message.bot.send_message(chat_id=telegram_id, text='Вы не зарегистрированы в системе.')
+        await message.bot.send_message(chat_id=telegram_id, text='Вы не зарегистрированы в системе.❌\n'
+                                                                 'Воспользуйтесь командой ➡️ /register.')
 
 
 def register_get(dp: Dispatcher):

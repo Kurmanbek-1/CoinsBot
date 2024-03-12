@@ -17,10 +17,7 @@ class AddPoints(StatesGroup):
 
 
 async def fsm_start(message: types.Message):
-    if message.from_user.id in Admins:
-        await AddPoints.name_user.set()
-        await message.answer("Имя пользователя?", reply_markup=buttons.cancel)
-    elif message.from_user.username in SuperAdmins:
+    if message.from_user.id in Admins or SuperAdmins:
         await AddPoints.name_user.set()
         await message.answer("Имя пользователя?", reply_markup=buttons.cancel)
     else:
@@ -35,45 +32,62 @@ async def load_name(message: types.Message, state: FSMContext):
 
 
 async def load_quantity(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['quantity'] = message.text
+    if message.text.isdigit():
+        async with state.proxy() as data:
+            data['quantity'] = message.text
 
-    query = "SELECT * FROM users WHERE name_user = ? AND telegram_id = ?"
-    user_id = cursor.execute(query, (data['name_user'], message.from_user.id)).fetchone()
+        query = "SELECT * FROM users WHERE name_user = ? AND telegram_id = ?"
+        user_id = cursor.execute(query, (data['name_user'], message.from_user.id)).fetchone()
 
-    if user_id:
-        # Избегаем ошибки, если user_id не существует
-        user_columns = cursor.description
-        if user_columns:
-            UserRecord = namedtuple('UserRecord', [col[0] for col in user_columns])
-            user_id = UserRecord(*user_id)
+        if user_id:
+            # Избегаем ошибки, если user_id не существует
+            user_columns = cursor.description
+            if user_columns:
+                UserRecord = namedtuple('UserRecord', [col[0] for col in user_columns])
+                user_id = UserRecord(*user_id)
 
-            await message.answer(text=f"Готово!\n"
-                                      f"Вы начислили - {data['quantity']} баллов пользователю {data['name_user']}",
-                                 reply_markup=buttons.startSuperAdmin)
+                if message.from_user.id in SuperAdmins:
+                    await message.answer(text=f"Готово!\n"
+                                              f"Вы начислили - {data['quantity']} баллов пользователю {data['name_user']}",
+                                         reply_markup=buttons.startSuperAdmin)
+                else:
+                    await message.answer(text=f"Готово!\n"
+                                              f"Вы начислили - {data['quantity']} баллов пользователю {data['name_user']}",
+                                         reply_markup=buttons.startAdmin)
 
-            await message.bot.send_message(chat_id=user_id.telegram_id,
-                                           text=f"Вам зачислили {data['quantity']} баллов!\n")
-            await sql_insert_user(state)
-            await state.finish()
+                await message.bot.send_message(chat_id=user_id.telegram_id,
+                                               text=f"Вам зачислили {data['quantity']} баллов!\n")
+                await sql_insert_user(state)
+                await state.finish()
+            else:
+                await message.answer(text="Не удалось получить описание столбцов из результата запроса.")
         else:
-            await message.answer(text="Не удалось получить описание столбцов из результата запроса.")
+            await state.finish()
+
+            if message.from_user.id in SuperAdmins:
+                await message.answer(text=f"Такого пользователя нет!", reply_markup=buttons.startSuperAdmin)
+
+            else:
+                await message.answer(text=f"Такого пользователя нет!", reply_markup=buttons.startAdmin)
+
     else:
-        await state.finish()
-        await message.answer(text=f"Такого пользователя нет!")
+        await message.answer('Введите числами!')
 
 
 async def cancel_reg(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
         await state.finish()
-        await message.answer('Отменено!', reply_markup=None)
+        if message.from_user.id in SuperAdmins:
+            await message.answer('Отменено!', reply_markup=buttons.startSuperAdmin)
+
+        else:
+            await message.answer('Отменено!', reply_markup=buttons.startAdmin)
 
 
 # =======================================================================================================================
 def register_user_coins(dp: Dispatcher):
     dp.register_message_handler(cancel_reg, Text(equals="Отмена", ignore_case=True), state="*")
     dp.register_message_handler(fsm_start, Text(equals="Начислить_баллы", ignore_case=True), state="*")
-
     dp.register_message_handler(load_name, state=AddPoints.name_user)
     dp.register_message_handler(load_quantity, state=AddPoints.quantity)

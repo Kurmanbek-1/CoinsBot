@@ -14,20 +14,20 @@ user_id = None
 
 
 class RegisterUser(StatesGroup):
-    name_user = State()  # 1
+    name_user = State()
 
 
 async def fsm_start(message: types.Message):
-    # if message.from_user.id in Admins:
-    #     await RegisterUser.name_user.set()
-    #     await message.answer("Вы уже являетесь админом!", reply_markup=buttons.startAdmin)
-    # elif message.from_user.username in SuperAdmins:
-    #     await message.answer("Вы уже являетесь админом!", reply_markup=buttons.startSuperAdmin)
-    #
-    # else:
-    await RegisterUser.name_user.set()
-    await message.answer('Ваше имя?\n'
-                             'Только имя!')
+    if message.from_user.id in Admins:
+        await message.answer("Вы уже являетесь админом!", reply_markup=buttons.startAdmin)
+
+    elif message.from_user.username in SuperAdmins:
+        await message.answer("Вы уже являетесь админом!", reply_markup=buttons.startSuperAdmin)
+
+    else:
+        await RegisterUser.name_user.set()
+        await message.answer(text='Ваше имя?\n'
+                                  '(Только имя!)')
 
 
 async def load_name(message: types.Message, state: FSMContext):
@@ -39,7 +39,6 @@ async def load_name(message: types.Message, state: FSMContext):
                               'Вы теперь есть в базе данных!')
 
     await sql_insert_users(state)
-
     await state.finish()
 
 
