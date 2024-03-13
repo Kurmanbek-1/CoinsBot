@@ -4,4 +4,4 @@ venv
 .env
 **/__init__.py/
 handlers/__init__.py/
-db/all_users
+db/db.sqlite3

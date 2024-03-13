@@ -1,7 +1,8 @@
 import sqlite3
 from db import sql_queris
 
-db = sqlite3.connect("db/all_users")
+# db = sqlite3.connect("AdminPanelBot/db.sqlite3")
+db = sqlite3.connect("db/db.sqlite3")
 cursor = db.cursor()
 
 
