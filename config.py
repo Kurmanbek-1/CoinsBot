@@ -2,8 +2,9 @@ from aiogram import Dispatcher, Bot
 from decouple import config
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-Admins = []
+Admins = [995712956, ]
 SuperAdmins = [995712956, ]
+Developers = [995712956, ]
 
 
 # ID Айданы

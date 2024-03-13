@@ -34,3 +34,7 @@ INSERT_INTO_TABLE_USERS = """
 SELECT_ALL_USERS = """
     SELECT * FROM users
 """
+
+SELECT_USER_BY_NAME = """
+    SELECT * FROM users WHERE name_user = ?;
+"""

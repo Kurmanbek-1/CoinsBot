@@ -2,18 +2,20 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 startAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  one_time_keyboard=True,
-                                 ).add(KeyboardButton('Начислить_баллы'))
+                                 row_width=2,
+                                 ).add(KeyboardButton('/Начислить_AntsCoin'))
 
 startSuperAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  one_time_keyboard=True,
-                                 ).add(KeyboardButton('Начислить_баллы'),
-                                       KeyboardButton('/Все_баллы!'),
-                                       KeyboardButton('/Все_пользователи'))
+                                      row_width=2,
+                                 ).add(KeyboardButton('/Начислить_AntsCoin'),
+                                       KeyboardButton('/Редактировать_AntsCoin'),
+                                       KeyboardButton('/Все_пользователи'),
+                                       KeyboardButton('/Все_AntsCoin!'))
 
 startUser = ReplyKeyboardMarkup(resize_keyboard=True,
                                 one_time_keyboard=True,
-                                ).add(KeyboardButton('Мои_баллы!'),
-                                      KeyboardButton('/MyProfile'))
+                                ).add(KeyboardButton('/my_profile'))
 
 
 cancel = ReplyKeyboardMarkup(resize_keyboard=True,

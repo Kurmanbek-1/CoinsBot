@@ -1,25 +1,25 @@
 from aiogram.utils import executor
 import logging
-from config import SuperAdmins, bot, dp
+from config import Developers, bot, dp
 import buttons
 from db import ORM
-from handlers import (commands, FSM_crediting_points, register_users, get_coins,
-                      refactor_coins, get_all_and_delete_user)
+from handlers import (commands, FSM_crediting_points, register_users,
+                      get_all_and_delete_user, delete_user, refactor)
 
 
 # ==================================================================================================================
 async def on_startup(_):
-    for Admin in SuperAdmins:
+    for Admin in Developers:
         await bot.send_message(chat_id=Admin, text="Bot started!", reply_markup=buttons.startSuperAdmin)
         await ORM.sql_create()
 
 commands.register(dp)
 FSM_crediting_points.register_user_coins(dp)
 register_users.register_users(dp)
-get_coins.register_get(dp)
 
 get_all_and_delete_user.register_delete(dp)
-refactor_coins.register_update(dp)
+delete_user.register_user(dp)
+refactor.register_edit(dp)
 
 
 # ===========================================================================

@@ -19,7 +19,6 @@ async def sql_insert_user(state):
             data.get('name_user'),
             data.get('quantity')
         ))
-
         db.commit()
 
 
@@ -29,5 +28,9 @@ async def sql_insert_users(state):
             data.get('name_user'),
             data.get('telegram_id')
         ))
-
         db.commit()
+
+
+async def get_user_by_name(name_user):
+    cursor.execute(sql_queris.SELECT_USER_BY_NAME, (name_user,))
+    return cursor.fetchone()
