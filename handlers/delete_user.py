@@ -17,8 +17,7 @@ async def delete_staff_by_city(message: types.Message):
 
         else:
             for user in employees:
-                await message.answer(text=f"Name - {user[1]}\n"
-                                          f"Telegram ID - {user[2]}",
+                await message.answer(text=f"Name - {user[1]}\n",
                                      reply_markup=InlineKeyboardMarkup().add(
                                          InlineKeyboardButton(f"Удалить",
                                                               callback_data=f"delete_user {user[0]}")))
