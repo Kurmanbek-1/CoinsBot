@@ -76,31 +76,30 @@ async def myprofile(message: types):
     # Проверяем, что total_coins_result не равен None
     total_coins = total_coins_result[0] if total_coins_result is not None else 0
 
-    photo_user = open('media/user.png', 'rb')
-    photo_admin = open('media/admin.png', 'rb')
+    photo = open('media/admin.png', 'rb')
 
     # Проверяем, является ли пользователь администратором
     if message.from_user.id in SuperAdmins:
-        await message.answer_photo(photo=photo_admin, caption=f"Вы SuperAdmin❗️\n"
-                                                              f"=======================\n"
-                                                              f"Name - {user_name}\n"
-                                                              f"-----------------------\n"
-                                                              f"AntsCoin - {total_coins}\n"
-                                                              f"=======================",
+        await message.answer_photo(photo=photo, caption=f"Вы SuperAdmin❗️\n"
+                                                        f"=======================\n"
+                                                        f"Name - {user_name}\n"
+                                                        f"-----------------------\n"
+                                                        f"AntsCoin - {total_coins}\n"
+                                                        f"=======================",
                                    reply_markup=buttons.startSuperAdmin)
 
     elif message.from_user.id in Admins:
-        await message.answer_photo(photo=photo_admin, caption=f"Вы Admin❗️\n"
-                                                              f"=======================\n"
-                                                              f"Name - {user_name}\n"
-                                                              f"-----------------------\n"
-                                                              f"AntsCoin - {total_coins}\n",
+        await message.answer_photo(photo=photo, caption=f"Вы Admin❗️\n"
+                                                        f"=======================\n"
+                                                        f"Name - {user_name}\n"
+                                                        f"-----------------------\n"
+                                                        f"AntsCoin - {total_coins}\n",
                                    reply_markup=buttons.startAdmin)
 
     else:
         # Проверяем, есть ли баллы для пользователя
         if total_coins is not None:
-            await message.bot.send_photo(photo=photo_user,
+            await message.bot.send_photo(photo=photo,
                                          chat_id=telegram_id,
                                          caption=f"=======================\n"
                                                  f"Name - {user_name}\n"
@@ -109,7 +108,7 @@ async def myprofile(message: types):
                                                  f"=======================")
         else:
             # Если баллов нет, отобразить только имя с 0 баллами
-            await message.bot.send_photo(photo=photo_user,
+            await message.bot.send_photo(photo=photo,
                                          chat_id=telegram_id,
                                          caption=f"=======================\n"
                                                  f"Name - {user_name}\n"

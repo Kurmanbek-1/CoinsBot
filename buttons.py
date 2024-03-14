@@ -8,8 +8,8 @@ startAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
 startSuperAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  one_time_keyboard=True,
                                       row_width=2,
-                                 ).add(KeyboardButton('/Начислить_AntsCoin'),
-                                       KeyboardButton('/Редактировать_AntsCoin'),
+                                 ).add(KeyboardButton('Начислить_AntsCoin'),
+                                       KeyboardButton('Редактировать_AntsCoin'),
                                        KeyboardButton('/Все_пользователи'),
                                        KeyboardButton('/Все_AntsCoin!'))
 

@@ -21,12 +21,12 @@ async def send_users(message: types.Message):
                 user_quantity = user[1]
 
                 callback_data = f"delete_user_{user_name.replace(' ', '_')}"
-                print(f"Callback data for user {user_name}: {callback_data}")
+                print(f"User: {user_name}, Quantity: {user_quantity}, Callback Data: {callback_data}")
 
-                keyboard.add(InlineKeyboardButton("Удалить", callback_data=callback_data))
+                keyboard.add(InlineKeyboardButton(f"{user_name} - {user_quantity}", callback_data=callback_data))
 
             # Используем types.InputFile для передачи изображения
-            photo_user = types.InputFile("media/img.png")
+            photo_user = types.InputFile("media/admin.png")
 
             await message.answer_photo(photo=photo_user, caption="Список пользователей:", reply_markup=keyboard)
     else:

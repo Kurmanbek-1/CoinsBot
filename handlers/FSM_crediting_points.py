@@ -134,6 +134,6 @@ async def cancel_reg(message: types.Message, state: FSMContext):
 
 def register_user_coins(dp: Dispatcher):
     dp.register_message_handler(cancel_reg, Text(equals="Отмена", ignore_case=True), state="*")
-    dp.register_message_handler(fsm_start, commands=["Начислить_AntsCoin"])
+    dp.register_message_handler(fsm_start, Text(equals="Начислить_AntsCoin", ignore_case=True), state="*")
     dp.register_message_handler(load_name, state=AddPoints.name_user)
     dp.register_message_handler(load_quantity, state=AddPoints.quantity)
