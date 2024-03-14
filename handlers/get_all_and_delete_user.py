@@ -15,7 +15,6 @@ async def send_users(message: types.Message):
         if not employees:
             await message.answer("Список пуст!")
         else:
-            keyboard = InlineKeyboardMarkup()
             for user in employees:
                 user_name = user[0]
                 user_quantity = user[1]
@@ -23,12 +22,11 @@ async def send_users(message: types.Message):
                 callback_data = f"delete_user_{user_name.replace(' ', '_')}"
                 print(f"User: {user_name}, Quantity: {user_quantity}, Callback Data: {callback_data}")
 
-                keyboard.add(InlineKeyboardButton(f"{user_name} - {user_quantity}", callback_data=callback_data))
+                keyboard = InlineKeyboardMarkup()
+                keyboard.add(InlineKeyboardButton("Удалить", callback_data=callback_data))
 
-            # Используем types.InputFile для передачи изображения
-            photo_user = types.InputFile("media/admin.png")
-
-            await message.answer_photo(photo=photo_user, caption="Список пользователей:", reply_markup=keyboard)
+                await message.answer(text=f"Name - {user_name}\n"
+                                          f"AntsCoin'ов - {user_quantity} ", reply_markup=keyboard)
     else:
         await message.answer("У вас нет прав к этой команде!")
 
