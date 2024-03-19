@@ -38,3 +38,35 @@ SELECT_ALL_USERS = """
 SELECT_USER_BY_NAME = """
     SELECT * FROM users WHERE name_user = ?;
 """
+
+CREATE_TABLE_INFO = """
+    CREATE TABLE IF NOT EXISTS info
+    (id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name_user VARCHAR(255),
+    quantity VARCHAR(255),
+    admin_id INTEGER,
+    date VARCHAR(255)
+    )
+"""
+
+INSERT_INTO_TABLE_INFO = """
+    INSERT INTO info(name_user, quantity, admin_id, date) 
+    VALUES (?, ?, ?, ?)
+"""
+
+CREATE_TABLE_ADMINS = """
+    CREATE TABLE IF NOT EXISTS admins
+    (id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name_admin VARCHAR(255),
+    admin_id VARCHAR(255)
+    )
+"""
+
+INSERT_INTO_TABLE_ADMINS = """
+    INSERT INTO admins(name_admin, admin_id) 
+    VALUES (?, ?)
+"""
+
+SELECT_ADMINS_NAME = """
+    SELECT * FROM admins WHERE name_admin = ?;
+"""

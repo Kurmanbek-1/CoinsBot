@@ -6,6 +6,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from db.ORM import sql_insert_user, cursor  # Убедитесь, что пути импорта правильные
 import buttons
 from config import bot, Admins, SuperAdmins
+from datetime import datetime
 
 
 # Определение клавиатуры для выбора пользователя
@@ -50,6 +51,8 @@ async def send_notification_to_all(message: types.Message, user_name: str, amoun
 async def load_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['name_user'] = message.text
+        data['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        data['admin_id'] = message.from_user.id
 
     # Проверяем, что выбранное имя присутствует в клавиатуре
     users_query = "SELECT name_user FROM users"
@@ -71,8 +74,6 @@ async def load_quantity(message: types.Message, state: FSMContext):
 
         users_query = "SELECT * FROM users WHERE name_user = ?"
         users_data = cursor.execute(users_query, (data['name_user'],)).fetchone()
-
-        print("Данные пользователей:", users_data)
 
         if users_data:
             # Извлечение данных из таблицы users
@@ -96,9 +97,16 @@ async def load_quantity(message: types.Message, state: FSMContext):
                 cursor.execute(insert_all_users_query, (name_user, data['quantity']))
                 new_quantity = data['quantity']
 
+            # Записываем в базу данных данные об админе и дате
+            admin_id = data['admin_id']
+            date = data['date']
+
+            # Записываем данные в таблицу info
+            insert_info_query = "INSERT INTO info(name_user, quantity, admin_id, date) VALUES (?, ?, ?, ?)"
+            cursor.execute(insert_info_query, (name_user, data['quantity'], admin_id, date))
+
             cursor.connection.commit()
 
-            # Отправка уведомления всем пользователям, кроме того, кому начисляются монеты
             await send_notification_to_all(message, name_user, data['quantity'])
 
             if message.from_user.id in SuperAdmins:

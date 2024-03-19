@@ -11,7 +11,8 @@ startSuperAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  ).add(KeyboardButton('Начислить_AntsCoin'),
                                        KeyboardButton('Редактировать_AntsCoin'),
                                        KeyboardButton('/Все_пользователи'),
-                                       KeyboardButton('/Все_AntsCoin!'))
+                                       KeyboardButton('/Все_AntsCoin!'),
+                                       KeyboardButton('/Отчёт'))
 
 startUser = ReplyKeyboardMarkup(resize_keyboard=True,
                                 one_time_keyboard=True,

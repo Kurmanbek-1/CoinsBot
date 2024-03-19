@@ -117,7 +117,12 @@ async def myprofile(message: types):
                                                  f"=======================")
 
 
+async def back(message: types.Message):
+    await message.answer('Вы возратились назад', reply_markup=buttons.startSuperAdmin)
+
+
 def register(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start'])
     dp.register_message_handler(info, commands=['info'])
     dp.register_message_handler(myprofile, commands=['my_profile'])
+    dp.register_message_handler(back, commands=['<_Назад'])
