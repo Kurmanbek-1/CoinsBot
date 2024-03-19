@@ -61,7 +61,8 @@ async def load_new_quantity(message: types.Message, state: FSMContext):
         user_info = cursor.execute("SELECT telegram_id FROM users WHERE name_user = ?", (data['name_user'],)).fetchone()
         if user_info:
             telegram_id = user_info[0]
-            await bot.send_message(telegram_id, f"Ваш баланс был изменен на {data['new_quantity']} AntsCoin.")
+            await bot.send_message(telegram_id, f"У вас было произведено списание.\n"
+                                                f"Ваш текущий остаток - {data['new_quantity']} AntsCoin'ов.")
         else:
             print(f"User {data['name_user']} not found in the users table.")
 
