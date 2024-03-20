@@ -39,6 +39,10 @@ SELECT_USER_BY_NAME = """
     SELECT * FROM users WHERE name_user = ?;
 """
 
+SELECT_USER_ID_BY_NAME = """
+    SELECT * FROM users WHERE telegram_id = ?;
+"""
+
 CREATE_TABLE_INFO = """
     CREATE TABLE IF NOT EXISTS info
     (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,16 +62,20 @@ INSERT_INTO_TABLE_INFO = """
 CREATE_TABLE_ADMINS = """
     CREATE TABLE IF NOT EXISTS admins
     (id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name_admin VARCHAR(255),
-    admin_id VARCHAR(255)
+    name_user VARCHAR(255),
+    telegram_id VARCHAR(255)
     )
 """
 
 INSERT_INTO_TABLE_ADMINS = """
-    INSERT INTO admins(name_admin, admin_id) 
+    INSERT INTO admins(name_user, telegram_id) 
     VALUES (?, ?)
 """
 
 SELECT_ADMINS_NAME = """
-    SELECT * FROM admins WHERE name_admin = ?;
+    SELECT * FROM admins WHERE name_user = ?;
+"""
+
+SELECT_ADMINS_ID_NAME = """
+    SELECT * FROM admins WHERE telegram_id = ?;
 """

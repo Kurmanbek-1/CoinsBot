@@ -4,7 +4,8 @@ from config import Developers, bot, dp
 import buttons
 from db import ORM
 from handlers import (commands, FSM_crediting_points, register_users,
-                      get_all_and_delete_user, delete_user, refactor, report_AntsCoins, register_admin)
+                      get_all_and_delete_user, delete_user, refactor,
+                      report_AntsCoins, register_admin, my_profile)
 
 
 # ==================================================================================================================
@@ -22,6 +23,7 @@ delete_user.register_user(dp)
 refactor.register_edit(dp)
 report_AntsCoins.register_report(dp)
 register_admin.register_admin(dp)
+my_profile.register_my_profile(dp)
 
 # ===========================================================================
 if __name__ == "__main__":

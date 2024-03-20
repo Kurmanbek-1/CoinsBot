@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import buttons
-from db.ORM import sql_insert_users, get_user_by_name  # Подставьте свои импорты для работы с базой данных
+from db.ORM import sql_insert_users, get_user_by_name, get_user_id_by_name
 from config import Admins, SuperAdmins
 
 # =======================================================================================================================
@@ -16,8 +16,14 @@ class RegisterUser(StatesGroup):
 
 
 async def fsm_start(message: types.Message):
-    await RegisterUser.name_user.set()
-    await message.answer(text='Введите своё имя:\n(Только имя!)', reply_markup=buttons.cancel)
+    telegram_id = message.from_user.id
+
+    if await is_user_id_exists(telegram_id):
+        await message.answer('Вы уже проходили регистрацию!')
+        return
+    else:
+        await RegisterUser.name_user.set()
+        await message.answer(text='Введите своё имя:\n(Только имя!)', reply_markup=buttons.cancel)
 
 
 async def load_name(message: types.Message, state: FSMContext):
@@ -30,6 +36,7 @@ async def load_name(message: types.Message, state: FSMContext):
         await message.answer('Пользователь с таким именем уже существует.\n'
                              'Пожалуйста, выберите другое имя.')
         return
+
 
     await RegisterUser.next()
     if message.from_user.id in SuperAdmins:
@@ -47,6 +54,12 @@ async def is_user_exists(name_user: str) -> bool:
     # Реальная логика проверки наличия пользователя с заданным именем в базе данных
     user = await get_user_by_name(name_user)
     return user is not None
+
+
+async def is_user_id_exists(telegram_id: str) -> bool:
+    # Реальная логика проверки наличия пользователя с заданным именем в базе данных
+    user_id = await get_user_id_by_name(telegram_id)
+    return user_id is not None
 
 
 async def cancel_reg(message: types.Message, state: FSMContext):

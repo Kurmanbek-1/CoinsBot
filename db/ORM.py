@@ -39,8 +39,8 @@ async def sql_insert_users(state):
 async def sql_insert_admins(state):
     async with state.proxy() as data_admin:
         cursor.execute(sql_queris.INSERT_INTO_TABLE_ADMINS, (
-            data_admin.get('name_admin'),
-            data_admin.get('admin_id')
+            data_admin.get('name_user'),
+            data_admin.get('telegram_id')
         ))
         db.commit()
 
@@ -50,6 +50,16 @@ async def get_user_by_name(name_user):
     return cursor.fetchone()
 
 
+async def get_user_id_by_name(telegram_id):
+    cursor.execute(sql_queris.SELECT_USER_ID_BY_NAME, (telegram_id,))
+    return cursor.fetchone()
+
+
 async def get_admins_name(name_admin):
     cursor.execute(sql_queris.SELECT_ADMINS_NAME, (name_admin,))
+    return cursor.fetchone()
+
+
+async def get_admins_id_name(telegram_id):
+    cursor.execute(sql_queris.SELECT_ADMINS_ID_NAME, (telegram_id,))
     return cursor.fetchone()

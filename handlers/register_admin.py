@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import buttons
-from db.ORM import sql_insert_admins, get_admins_name  # Подставьте свои импорты для работы с базой данных
+from db.ORM import sql_insert_admins, get_admins_name, sql_insert_users, get_admins_id_name
 from config import Admins, SuperAdmins
 
 
@@ -15,27 +15,37 @@ class RegisterAdmin(StatesGroup):
 
 
 async def fsm_start(message: types.Message):
+    telegram_id = message.from_user.id
     if message.from_user.id in SuperAdmins or Admins:
-        await RegisterAdmin.name_user.set()
-        await message.answer(text='Введите своё имя:\n(Только имя!)', reply_markup=buttons.cancel)
+        if await is_user_id_exists(telegram_id):
+            await message.answer('Вы уже проходили регистрацию!')
+            return
+        else:
+            await RegisterAdmin.name_user.set()
+            await message.answer(text='Введите своё имя:\n(Только имя!)', reply_markup=buttons.cancel)
     else:
         await message.answer('Вы не являетесь админом!')
 
 
 async def load_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data_admin:
-        data_admin['name_admin'] = message.text
-        data_admin['admin_id'] = message.chat.id
+        data_admin['name_user'] = message.text
+        data_admin['telegram_id'] = message.chat.id
 
     # Проверка, существует ли пользователь с заданным именем в базе данных
-    if await is_user_exists(data_admin['name_admin']):
+    if await is_user_exists(data_admin['name_user']):
         await message.answer('Пользователь с таким именем уже существует.\n'
                              'Пожалуйста, выберите другое имя.')
         return
 
     await RegisterAdmin.next()
 
+    # Запись в таблицу админов
     await sql_insert_admins(state)
+
+    # Запись в таблицу пользователей
+    await sql_insert_users(state)
+
     if message.from_user.id in SuperAdmins:
         await message.answer(text='Готово!\nВы теперь есть в базе данных!', reply_markup=buttons.startSuperAdmin)
     elif message.from_user in Admins:
@@ -44,10 +54,16 @@ async def load_name(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-async def is_user_exists(name_admin: str) -> bool:
+async def is_user_exists(name_user: str) -> bool:
     # Реальная логика проверки наличия пользователя с заданным именем в базе данных
-    user = await get_admins_name(name_admin)
+    user = await get_admins_name(name_user)
     return user is not None
+
+
+async def is_user_id_exists(telegram_id: str) -> bool:
+    # Реальная логика проверки наличия пользователя с заданным именем в базе данных
+    user_id = await get_admins_id_name(telegram_id)
+    return user_id is not None
 
 
 async def cancel_reg(message: types.Message, state: FSMContext):
