@@ -45,13 +45,14 @@ CREATE_TABLE_INFO = """
     name_user VARCHAR(255),
     quantity VARCHAR(255),
     admin_id INTEGER,
-    date VARCHAR(255)
+    date VARCHAR(255), 
+    action VARCHAR(255)
     )
 """
 
 INSERT_INTO_TABLE_INFO = """
-    INSERT INTO info(name_user, quantity, admin_id, date) 
-    VALUES (?, ?, ?, ?)
+    INSERT INTO info(name_user, quantity, admin_id, date, action) 
+    VALUES (?, ?, ?, ?, ?)
 """
 
 CREATE_TABLE_ADMINS = """

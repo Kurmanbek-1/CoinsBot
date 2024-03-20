@@ -6,6 +6,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from db.ORM import cursor, db
 from config import bot, SuperAdmins, Admins
 import buttons
+from datetime import datetime
 
 
 class EditPoints(StatesGroup):
@@ -39,8 +40,16 @@ async def fsm_start_edit(message: types.Message):
 async def load_name_for_edit(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['name_user'] = message.text
+        data['date'] = datetime.now().strftime("%Y-%m-%d %H:%M")
     await EditPoints.next()
     await message.answer(text='Новое количество AntsCoin?', reply_markup=buttons.cancel)
+
+
+async def insert_edit_info(admin_id: int, name_user: str, quantity: int, date: str):
+    insert_query = "INSERT INTO info (action, admin_id, name_user, quantity, date) VALUES (?, ?, ?, ?, ?)"
+    action_info = "Редактировано!"
+    cursor.execute(insert_query, (action_info, admin_id, name_user, quantity, date))
+    cursor.connection.commit()
 
 
 async def load_new_quantity(message: types.Message, state: FSMContext):
@@ -51,6 +60,8 @@ async def load_new_quantity(message: types.Message, state: FSMContext):
         update_query = "UPDATE all_users SET quantity = ? WHERE name_user = ?"
         cursor.execute(update_query, (data['new_quantity'], data['name_user']))
         cursor.connection.commit()  # Фиксация изменений в базе данных
+
+        await insert_edit_info(message.from_user.id, data['name_user'], int(data['new_quantity']), data['date'])
 
         await message.answer(text=f"Готово!\n"
                                   f"Вы изменили количество AntsCoin для пользователя {data['name_user']} "

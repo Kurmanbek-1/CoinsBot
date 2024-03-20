@@ -29,7 +29,6 @@ async def start_report(message: types.Message):
     else:
         await message.answer("У вас нет прав к этой команде!")
 
-
 async def process_user_choice(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         selected_user = message.text
@@ -47,10 +46,13 @@ async def process_user_choice(message: types.Message, state: FSMContext):
             admin_info = cursor.execute("SELECT name_admin FROM admins WHERE admin_id = ?", (admin_id,)).fetchone()
             admin_name = admin_info[0] if admin_info else "Неизвестный админ"
 
+            status = user[5] if user[5] is not None else "Без статуса"  # Проверяем наличие статуса
+
             await message.answer(text=f"Кому - {user[1]}\n"
                                       f"Кол.AnstCoin'ов - {user[2]}\n"
                                       f"От - {admin_name}\n"
-                                      f"Когда - {user[4]}")
+                                      f"Когда - {user[4]}\n"
+                                      f"Status - {status}")
 
         await ReportState.VIEWING_REPORT.set()
 
