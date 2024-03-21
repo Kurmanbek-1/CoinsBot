@@ -38,22 +38,10 @@ async def start(message: types.Message):
                                  reply_markup=buttons.startUser)
 
 
-async def info(message: types.Message):
-    if message.from_user.id in SuperAdmins:
-        await message.answer(text=f"")
-
-    elif message.from_user.id in Admins:
-        await message.answer(text=f"")
-
-    else:
-        await message.answer(text=f"")
-
-
 async def back(message: types.Message):
     await message.answer('Вы возратились назад', reply_markup=buttons.startSuperAdmin)
 
 
 def register(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start'])
-    dp.register_message_handler(info, commands=['info'])
     dp.register_message_handler(back, commands=['<_Назад'])
