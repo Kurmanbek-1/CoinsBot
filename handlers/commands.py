@@ -13,7 +13,7 @@ async def start(message: types.Message):
         if user_data:
             await message.answer(text='Вы уже зарегистрированы! ✅ \n'
                                       'Посмотреть профиль ➡️ /my_profile\n'
-                                      'Вы SuperAdmin‼️')
+                                      'Вы SuperAdmin‼️', reply_markup=buttons.startSuperAdmin)
             return
         else:
             await message.answer(text='Добро пожаловать в бот!\n'
@@ -22,16 +22,17 @@ async def start(message: types.Message):
         if user_data:
             await message.answer(text='Вы уже зарегистрированы! ✅ \n'
                                       'Посмотреть профиль ➡️ /my_profile\n'
-                                      'Вы Admin‼️')
+                                      'Вы Admin‼️', reply_markup=buttons.startAdmin)
             return
         else:
             await message.answer(text='Добро пожаловать в бот!\n'
                                       'Вы Admin‼️', reply_markup=buttons.startAdmin)
     else:
         if user_data:
-            await message.answer(text='Вы уже зарегистрированы! ✅ \n'
-                                      'Посмотреть профиль ➡️ /my_profile')
-            return
+            if user_id in SuperAdmins:
+                await message.answer(text='Вы уже зарегистрированы! ✅ \n'
+                                          'Посмотреть профиль ➡️ /my_profile', reply_markup=buttons.startUser)
+                return
         else:
             await message.answer(text='Добро пожаловать в бот!\n'
                                       'Для того чтобы начать, нажмите на команду ➡️ /registration',

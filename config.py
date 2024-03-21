@@ -4,7 +4,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 TOKEN = "6570711981:AAGo0p436G80I_ziI24xTQblz3Z-LhPnM5w"
 Admins = [995712956, ]
-SuperAdmins = [995712956, ]
+SuperAdmins = []
 
 # =======================================================================
 # Рабочие!

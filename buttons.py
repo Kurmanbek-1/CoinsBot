@@ -3,7 +3,7 @@ from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 startAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  one_time_keyboard=True,
                                  row_width=2,
-                                 ).add(KeyboardButton('/Начислить_AntsCoin'))
+                                 ).add(KeyboardButton('Начислить_AntsCoin'))
 
 startSuperAdmin = ReplyKeyboardMarkup(resize_keyboard=True,
                                  one_time_keyboard=True,
