@@ -1,6 +1,6 @@
 from aiogram import Dispatcher, types
-from db.ORM import cursor, db
-from config import bot, SuperAdmins
+from db.ORM import cursor
+from config import SuperAdmins
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
@@ -55,7 +55,7 @@ async def process_user_choice(message: types.Message, state: FSMContext):
                                       f"Когда - {user[4]}\n"
                                       f"Status - {status}")
 
-        await ReportState.VIEWING_REPORT.set()
+        # await ReportState.VIEWING_REPORT.set()
 
 
 async def cancel_reg(message: types.Message, state: FSMContext):
